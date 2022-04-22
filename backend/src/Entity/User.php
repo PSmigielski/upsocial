@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -11,6 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Table(name: '`user`')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "CUSTOM")]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -44,6 +46,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified;
 
+    public function __construct(string $username, string $name, string $surname, string $password, string $gender,DateTimeInterface $birthday,string $email){
+        $this->setUsername($username);
+        $this->setSurname($surname);
+        $this->setName($name);
+        $this->setBirthday($birthday);
+        $this->setPassword($password);
+        $this->setGender($gender);
+        $this->setIsVerified(false);
+        $this->setEmail($email);
+    }
     public function getId(): ?int
     {
         return $this->id;
