@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class JsonDecoder
 {
-    public static function decode(Request $request): array
+    public function decode(Request $request): array
     {
         $reqData = [];
         if ($content = $request->getContent()) {

@@ -10,6 +10,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
+#[ORM\UniqueConstraint(name: "unique_email", columns: ["email"])]
+#[ORM\UniqueConstraint(name: "unique_username", columns: ["username"])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
 
@@ -19,7 +21,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\CustomIdGenerator("doctrine.uuid_generator")]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 254, unique: true)]
+    #[ORM\Column(type: 'string', length: 254)]
     private $username;
 
     #[ORM\Column(type: 'json')]
@@ -37,7 +39,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'date')]
     private $birthday;
 
-    #[ORM\Column(type: 'string', length: 254, unique: true)]
+    #[ORM\Column(type: 'string', length: 254)]
     private $email;
 
     #[ORM\Column(type: 'string', length: 20)]
@@ -46,12 +48,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified;
 
-    public function __construct(string $username, string $name, string $surname, string $password, string $gender,DateTimeInterface $birthday,string $email){
+    public function __construct(string $username, string $name, string $surname, string $gender,DateTimeInterface $birthday,string $email){
         $this->setUsername($username);
         $this->setSurname($surname);
         $this->setName($name);
         $this->setBirthday($birthday);
-        $this->setPassword($password);
         $this->setGender($gender);
         $this->setIsVerified(false);
         $this->setEmail($email);
