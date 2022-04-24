@@ -5,6 +5,7 @@ namespace App\Controller;
 use DateTime;
 use App\Util\JsonDecoder;
 use App\Entity\User;
+use App\Event\UserCreateEvent;
 use App\Exception\ApiException;
 use App\Service\ValidatorService;
 use Doctrine\Persistence\ManagerRegistry;
@@ -35,15 +36,16 @@ class AuthController extends AbstractController
         $this->userPasswordHasher = $userPasswordHasher;
     }
     #[Route('/register', name: 'app_auth_register')]
-    public function index(Request $request): Response
+    public function register(Request $request): Response
     {
         $data = $this->jsonDecoder->decode($request);
         $this->validator->validateSchema('/../Schemas/register.json', (object)$data);
-        $user = new User("adamka", "adam", "kowalski","male", new DateTime(), "adam@adaam.com" );
+        $user = new User($data["username"], $data["name"], $data["surname"], $data["gender"], new DateTime($data["birthday"]), $data["email"] );
         $hashedPassword = $this->userPasswordHasher->hashPassword($user, $data['password']);
         $user->setPassword($hashedPassword);
         $this->em->persist($user);
         $this->em->flush();
-        return new JsonResponse(["message" => "hello fuckers"], 201);
+        $event = $this->eventDispatcher->dispatch(new UserCreateEvent($user, new JsonResponse([], 201)), UserCreateEvent::NAME);
+        return $event->getResponse();
     }
 }
