@@ -6,11 +6,10 @@ use DateTime;
 use App\Util\JsonDecoder;
 use App\Entity\User;
 use App\Event\UserCreateEvent;
-use App\Exception\ApiException;
 use App\Service\ValidatorService;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
-use Exception;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,15 +24,18 @@ class AuthController extends AbstractController
     private UserPasswordHasherInterface $userPasswordHasher;
     private JsonDecoder $jsonDecoder;
     private ObjectManager $em;
+    private EventDispatcherInterface $eventDispatcher;
     public function __construct(JsonDecoder $jsonDecoder,
         ManagerRegistry $doctrine,
         ValidatorService $validator,
-        UserPasswordHasherInterface $userPasswordHasher
+        UserPasswordHasherInterface $userPasswordHasher,
+        EventDispatcherInterface $eventDispatcher
     ){
         $this->em = $doctrine->getManager();
         $this->jsonDecoder = $jsonDecoder;
         $this->validator = $validator;
         $this->userPasswordHasher = $userPasswordHasher;
+        $this->eventDispatcher = $eventDispatcher;
     }
     #[Route('/register', name: 'app_auth_register')]
     public function register(Request $request): Response

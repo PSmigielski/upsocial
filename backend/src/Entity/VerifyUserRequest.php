@@ -14,11 +14,11 @@ class VerifyUserRequest
     #[ORM\CustomIdGenerator("doctrine.uuid_generator")]
     private $id;
 
-    #[ORM\OneToOne(targetEntity: User::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: User::class, cascade: ["remove"])]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }

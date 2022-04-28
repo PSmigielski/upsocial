@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\VerifyEmailRequest;
+use App\Entity\VerifyUserRequest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -20,14 +20,14 @@ class VerifyEmailRequestRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, VerifyEmailRequest::class);
+        parent::__construct($registry, VerifyUserRequest::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(VerifyEmailRequest $entity, bool $flush = true): void
+    public function add(VerifyUserRequest $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -39,7 +39,7 @@ class VerifyEmailRequestRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(VerifyEmailRequest $entity, bool $flush = true): void
+    public function remove(VerifyUserRequest $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
